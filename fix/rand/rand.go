@@ -4,7 +4,7 @@ package rand
 
 import "math/rand"
 
-// Uint64 returns a pseudo-random 32-bit value as a uint64 from the
+// Uint64 returns a pseudo-random 64-bit value as a uint64 from the
 // default Source.  Calls Uint32, shifts, and ors with another call to
 // Uint32.
 // https://groups.google.com/d/topic/golang-nuts/Kle874lT1Eo/discussion
