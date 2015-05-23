@@ -1,7 +1,6 @@
-Go utilities.
+Utilities for Go.
 
-Installation
-------------
-You can currently `go get` the following path.
+# [GoDoc Documentation](https://godoc.org/chrispennello.com/go/util)
 
-    go get chrispennello.com/go/util/fix/rand
+# Installation
+go get chrispennello.com/go/util[/...]
