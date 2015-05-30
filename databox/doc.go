@@ -1,7 +1,7 @@
 // chris 052915
 
 // Package databox defines an extremely simple data encapsulation format
-// consisting of an int64 length header followed by arbitrary data.
+// consisting of a length header followed by arbitrary data.
 //
 // Given an io.Reader with arbitrary data, wrap it with a Marshaller.
 // The Marshaller will first emit the header data, then the rest of the
