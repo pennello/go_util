@@ -10,16 +10,16 @@ import (
 	"io/ioutil"
 )
 
-func testMarshaller(t *testing.T, length int) {
-	if length > 0xff {
-		panic("length too big")
+func testMarshaller(t *testing.T, size int) {
+	if size > 0xff {
+		panic("size too big")
 	}
-	b := make([]byte, length)
+	b := make([]byte, size)
 	r := bytes.NewBuffer(b)
-	m := NewMarshaller(r, int64(length))
+	m := NewMarshaller(r, int64(size))
 	br, err := ioutil.ReadAll(m)
-	expect := make([]byte, 8+length)
-	copy(expect[0:8], []byte{0, 0, 0, 0, 0, 0, 0, byte(length)})
+	expect := make([]byte, 8+size)
+	copy(expect[0:8], []byte{0, 0, 0, 0, 0, 0, 0, byte(size)})
 	if !bytes.Equal(br, expect) {
 		t.Error(br)
 		return
@@ -29,16 +29,16 @@ func testMarshaller(t *testing.T, length int) {
 	}
 }
 
-func testMarshallerBuf(t *testing.T, length int) {
-	if length > 0xff {
-		panic("length too big")
+func testMarshallerBuf(t *testing.T, size int) {
+	if size > 0xff {
+		panic("size too big")
 	}
-	b := make([]byte, length)
+	b := make([]byte, size)
 	r := bytes.NewBuffer(b)
 	m := NewMarshaller(r, -1)
 	br, err := ioutil.ReadAll(m)
-	expect := make([]byte, 8+length)
-	copy(expect[0:8], []byte{0, 0, 0, 0, 0, 0, 0, byte(length)})
+	expect := make([]byte, 8+size)
+	copy(expect[0:8], []byte{0, 0, 0, 0, 0, 0, 0, byte(size)})
 	if !bytes.Equal(br, expect) {
 		t.Error(br)
 		return
@@ -48,16 +48,16 @@ func testMarshallerBuf(t *testing.T, length int) {
 	}
 }
 
-func testMarshallerShort(t *testing.T, length int) {
-	if length > 0xff {
-		panic("length too big")
+func testMarshallerShort(t *testing.T, size int) {
+	if size > 0xff {
+		panic("size too big")
 	}
-	b := make([]byte, length)
+	b := make([]byte, size)
 	r := bytes.NewBuffer(b)
-	m := NewMarshaller(r, int64(length)+1)
+	m := NewMarshaller(r, int64(size)+1)
 	br, err := ioutil.ReadAll(m)
-	expect := make([]byte, 8+length)
-	copy(expect[0:8], []byte{0, 0, 0, 0, 0, 0, 0, byte(length)})
+	expect := make([]byte, 8+size)
+	copy(expect[0:8], []byte{0, 0, 0, 0, 0, 0, 0, byte(size)})
 	if bytes.Equal(br, expect) {
 		t.Error(br)
 		return

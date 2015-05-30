@@ -31,12 +31,12 @@ func testRwEmpty(t *testing.T) {
 }
 
 func testRwRandom(t *testing.T) {
-	length := mathrand.Intn(100)
-	m := NewMarshaller(cryptorand.Reader, int64(length))
+	size := mathrand.Intn(100)
+	m := NewMarshaller(cryptorand.Reader, int64(size))
 	var bm, bu []byte
 	var err error
 	bm, err = ioutil.ReadAll(m)
-	if len(bm) != 8+length {
+	if len(bm) != 8+size {
 		t.Error(bm)
 	}
 	if err != nil {

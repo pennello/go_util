@@ -10,8 +10,8 @@ import (
 	"crypto/rand"
 )
 
-func testMinReaderLength(t *testing.T, length int) {
-	b := make([]byte, length)
+func testMinReaderSize(t *testing.T, size int) {
+	b := make([]byte, size)
 	var n int
 	var err error
 	_, err = rand.Read(b)
@@ -19,20 +19,20 @@ func testMinReaderLength(t *testing.T, length int) {
 		t.FailNow()
 	}
 	r := bytes.NewBuffer(b)
-	lim := &io.LimitedReader{R: r, N: int64(length)}
+	lim := &io.LimitedReader{R: r, N: int64(size)}
 	min := newMinReader(lim)
-	p := make([]byte, length)
+	p := make([]byte, size)
 	n, err = min.Read(p)
-	if n != length {
+	if n != size {
 		t.FailNow()
 	}
 	if err == io.ErrUnexpectedEOF {
-		t.Errorf("unexpected eof, length = %v, n = %v, err = %v", length, n, err)
+		t.Errorf("unexpected eof, size = %v, n = %v, err = %v", size, n, err)
 	}
 }
 
-func testMinReaderEarlyEOF(t *testing.T, length int) {
-	b := make([]byte, length/2)
+func testMinReaderEarlyEOF(t *testing.T, size int) {
+	b := make([]byte, size/2)
 	var n int
 	var err error
 	_, err = rand.Read(b)
@@ -40,11 +40,11 @@ func testMinReaderEarlyEOF(t *testing.T, length int) {
 		t.FailNow()
 	}
 	r := bytes.NewBuffer(b)
-	lim := &io.LimitedReader{R: r, N: int64(length)}
+	lim := &io.LimitedReader{R: r, N: int64(size)}
 	min := newMinReader(lim)
-	p := make([]byte, length)
+	p := make([]byte, size)
 	n, err = min.Read(p)
-	if n == length {
+	if n == size {
 		t.FailNow()
 	}
 	n, err = min.Read(p)
@@ -57,9 +57,9 @@ func testMinReaderEarlyEOF(t *testing.T, length int) {
 }
 
 func TestMinReader(t *testing.T) {
-	testMinReaderLength(t, 0)
-	testMinReaderLength(t, 1)
-	testMinReaderLength(t, 100)
+	testMinReaderSize(t, 0)
+	testMinReaderSize(t, 1)
+	testMinReaderSize(t, 100)
 	testMinReaderEarlyEOF(t, 1)
 	testMinReaderEarlyEOF(t, 100)
 }

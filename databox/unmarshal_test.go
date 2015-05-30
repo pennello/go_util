@@ -10,8 +10,8 @@ import (
 	"io/ioutil"
 )
 
-func testUnmarshallerNoHeader(t *testing.T, length int) {
-	b := make([]byte, length)
+func testUnmarshallerNoHeader(t *testing.T, size int) {
+	b := make([]byte, size)
 	r := bytes.NewBuffer(b)
 	u := NewUnmarshaller(r)
 	_, err := ioutil.ReadAll(u)
@@ -30,16 +30,16 @@ func testUnmarshallerBadHeader(t *testing.T) {
 	}
 }
 
-func testUnmarshaller(t *testing.T, length int) {
-	if length > 0xff {
-		panic("test length too big")
+func testUnmarshaller(t *testing.T, size int) {
+	if size > 0xff {
+		panic("test size too big")
 	}
-	b := make([]byte, 8+length)
-	b[7] = byte(length)
+	b := make([]byte, 8+size)
+	b[7] = byte(size)
 	r := bytes.NewBuffer(b)
 	u := NewUnmarshaller(r)
 	br, err := ioutil.ReadAll(u)
-	if len(br) != length {
+	if len(br) != size {
 		t.Error(br)
 	}
 	if err != nil {

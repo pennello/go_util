@@ -4,8 +4,8 @@ package databox
 
 import "io"
 
-// A minReader enforces a minimum length to read based on a
-// LimitedReader: if we get an EOF too early, it's transformed into an
+// A minReader enforces a minimum size to read based on a LimitedReader:
+// if we get an EOF too early, it's transformed into an
 // ErrUnexpectedEOF.
 
 type minReader struct {
