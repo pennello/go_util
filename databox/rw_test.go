@@ -16,7 +16,7 @@ func testRwEmpty(t *testing.T) {
 	var bm, bu []byte
 	var err error
 	bm, err = ioutil.ReadAll(m)
-	if len(bm) != 8 {
+	if len(bm) != HeaderSize {
 		t.Error(bm)
 	}
 	if err != nil {
@@ -25,7 +25,7 @@ func testRwEmpty(t *testing.T) {
 	}
 	u := NewUnmarshaller(bytes.NewBuffer(bm))
 	bu, err = ioutil.ReadAll(u)
-	if !bytes.Equal(bm[8:], bu) {
+	if !bytes.Equal(bm[HeaderSize:], bu) {
 		t.Fail()
 	}
 }
@@ -36,7 +36,7 @@ func testRwRandom(t *testing.T) {
 	var bm, bu []byte
 	var err error
 	bm, err = ioutil.ReadAll(m)
-	if len(bm) != 8+size {
+	if len(bm) != HeaderSize+size {
 		t.Error(bm)
 	}
 	if err != nil {
@@ -45,7 +45,7 @@ func testRwRandom(t *testing.T) {
 	}
 	u := NewUnmarshaller(bytes.NewBuffer(bm))
 	bu, err = ioutil.ReadAll(u)
-	if !bytes.Equal(bm[8:], bu) {
+	if !bytes.Equal(bm[HeaderSize:], bu) {
 		t.Fail()
 	}
 }

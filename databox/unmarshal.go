@@ -34,7 +34,7 @@ func NewUnmarshaller(r io.Reader) *Unmarshaller {
 // an io.ErrUnexpectedEOF.
 func (u *Unmarshaller) Read(p []byte) (n int, err error) {
 	if u.size == -1 {
-		headerBytes := make([]byte, 8)
+		headerBytes := make([]byte, HeaderSize)
 		_, err = io.ReadFull(u.r, headerBytes)
 		if err != nil {
 			if err == io.EOF {

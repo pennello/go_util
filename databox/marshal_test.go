@@ -18,8 +18,8 @@ func testMarshaller(t *testing.T, size int) {
 	r := bytes.NewBuffer(b)
 	m := NewMarshaller(r, int64(size))
 	br, err := ioutil.ReadAll(m)
-	expect := make([]byte, 8+size)
-	copy(expect[0:8], []byte{0, 0, 0, 0, 0, 0, 0, byte(size)})
+	expect := make([]byte, HeaderSize+size)
+	copy(expect[0:HeaderSize], []byte{0, 0, 0, 0, 0, 0, 0, byte(size)})
 	if !bytes.Equal(br, expect) {
 		t.Error(br)
 		return
@@ -37,8 +37,8 @@ func testMarshallerBuf(t *testing.T, size int) {
 	r := bytes.NewBuffer(b)
 	m := NewMarshaller(r, -1)
 	br, err := ioutil.ReadAll(m)
-	expect := make([]byte, 8+size)
-	copy(expect[0:8], []byte{0, 0, 0, 0, 0, 0, 0, byte(size)})
+	expect := make([]byte, HeaderSize+size)
+	copy(expect[0:HeaderSize], []byte{0, 0, 0, 0, 0, 0, 0, byte(size)})
 	if !bytes.Equal(br, expect) {
 		t.Error(br)
 		return
@@ -56,8 +56,8 @@ func testMarshallerShort(t *testing.T, size int) {
 	r := bytes.NewBuffer(b)
 	m := NewMarshaller(r, int64(size)+1)
 	br, err := ioutil.ReadAll(m)
-	expect := make([]byte, 8+size)
-	copy(expect[0:8], []byte{0, 0, 0, 0, 0, 0, 0, byte(size)})
+	expect := make([]byte, HeaderSize+size)
+	copy(expect[0:HeaderSize], []byte{0, 0, 0, 0, 0, 0, 0, byte(size)})
 	if bytes.Equal(br, expect) {
 		t.Error(br)
 		return

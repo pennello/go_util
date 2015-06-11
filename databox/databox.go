@@ -14,3 +14,6 @@
 // The Unmarshaller will first transparently read the header data, then
 // emit the data indicated by the header.
 package databox
+
+// HeaderSize is the size, in bytes, of the size header.
+const HeaderSize = 8

@@ -51,7 +51,7 @@ func (m *Marshaller) Read(p []byte) (n int, err error) {
 	}
 
 	if !m.headerReady {
-		headerBytes := make([]byte, 8)
+		headerBytes := make([]byte, HeaderSize)
 		binary.BigEndian.PutUint64(headerBytes, uint64(m.size))
 		header := bytes.NewBuffer(headerBytes)
 		lim := &io.LimitedReader{R: m.r, N: m.size}

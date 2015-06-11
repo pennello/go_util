@@ -34,7 +34,7 @@ func testUnmarshaller(t *testing.T, size int) {
 	if size > 0xff {
 		panic("test size too big")
 	}
-	b := make([]byte, 8+size)
+	b := make([]byte, HeaderSize+size)
 	b[7] = byte(size)
 	r := bytes.NewBuffer(b)
 	u := NewUnmarshaller(r)
