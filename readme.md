@@ -1,6 +1,9 @@
 Utilities for Go.
 
-# [GoDoc Documentation](https://godoc.org/chrispennello.com/go/util)
+Documentation
+-------------
+ - [GoDoc Documentation](https://godoc.org/chrispennello.com/go/util)
 
-# Installation
+Installation
+------------
     go get chrispennello.com/go/util[/...]
