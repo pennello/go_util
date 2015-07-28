@@ -65,3 +65,8 @@ func TestChooseString(t *testing.T) {
 	testChooseStringErr(t, "z", "a")
 	testChooseStringErr(t, "az", "ba")
 }
+
+func TestBool(t *testing.T) {
+	// Just make sure we can call it.
+	t.Log(Bool())
+}

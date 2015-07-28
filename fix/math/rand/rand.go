@@ -1,5 +1,6 @@
 // chris 052115 Uint64.
 // chris 072315 Choose functions.
+// chris 072815 Bool.
 
 package rand
 
@@ -67,4 +68,19 @@ func ChooseString(begin, end string) (string, error) {
 		ret[i] = ChooseRune(br[i], er[i])
 	}
 	return string(ret), nil
+}
+
+// Bool returns a pseudo-random boolean from the default Source.
+func Bool() bool {
+	// The distribution of the whole is uniform, so the distribution
+	// of each bit is uniform.  Thus, the probability that a
+	// particular bit is 1 is 50%.
+
+	// We use Int63 since that is the most fundamental source of
+	// random bits in the math/rand package.
+
+	if rand.Int63()&1 == 1 {
+		return true
+	}
+	return false
 }
