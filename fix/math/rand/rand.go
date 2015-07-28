@@ -40,8 +40,8 @@ func ChooseInt32(begin, end int32) int32 {
 }
 
 // ChooseRune returns a pseudo-random rune that is lexically and
-// inclusively between begin and end.  Specifically, the output x
-// satisfies begin <= x <= end.
+// inclusively between begin and end, using the default Source.
+// Specifically, the output x satisfies begin <= x <= end.
 func ChooseRune(begin, end rune) rune {
 	return rune(ChooseInt32(int32(begin), int32(end)))
 }
