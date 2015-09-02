@@ -23,7 +23,7 @@ func globalCtx(globalname string, inner func() error) error {
 	}
 	defer f.Close()
 
-	if err := unix.Flock(f.Fd(), unix.O_LOCK_EX); err != nil {
+	if err := unix.Flock(int(f.Fd()), unix.LOCK_EX); err != nil {
 		return err
 	}
 
@@ -31,13 +31,15 @@ func globalCtx(globalname string, inner func() error) error {
 		return err
 	}
 
-	if err = unix.Flock(f.Fd(), unix.O_LOCK_UN); err != nil {
+	if err = unix.Flock(int(f.Fd()), unix.LOCK_UN); err != nil {
 		return err
 	}
+
+	return nil
 }
 
 func Lock(globalname, localname string) (*LockContext, error) {
-	var lc LockContext
+	var lc *LockContext
 
 	err := globalCtx(globalname, func() error {
 		f, err := os.Openfile(localname, os.O_CREATE, 0666)
@@ -45,7 +47,7 @@ func Lock(globalname, localname string) (*LockContext, error) {
 			return err
 		}
 
-		err = unix.Flock(f.Fd(), unix.O_LOCKEX | unix.O_NONBLOCK)
+		err = unix.Flock(int(f.Fd()), unix.LOCK_EX | unix.LOCK_NB)
 		if err != nil {
 			f.Close()
 			return err
@@ -55,6 +57,8 @@ func Lock(globalname, localname string) (*LockContext, error) {
 			globalname: globalname,
 			local: f,
 		}
+
+		return nil
 	})
 
 	if err != nil {
@@ -68,6 +72,6 @@ func Lock(globalname, localname string) (*LockContext, error) {
 func (lc *LockContext) Unlock() error {
 	return globalCtx(lc.globalname, func() error {
 		lc.local.Close()
-		return os.Remove(lc.local.Name)
+		return os.Remove(lc.local.Name())
 	})
 }
