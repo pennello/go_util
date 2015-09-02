@@ -16,7 +16,7 @@ import (
 
 const mode = 0666
 
-type LockContext struct {
+type LockRmContext struct {
 	globalname string
 
 	local *os.File
@@ -44,8 +44,8 @@ func globalCtx(globalname string, inner func() error) error {
 	return nil
 }
 
-func Lock(globalname, localname string) (*LockContext, error) {
-	var lc *LockContext
+func LockRm(globalname, localname string) (*LockRmContext, error) {
+	var lrc *LockRmContext
 
 	err := globalCtx(globalname, func() error {
 		f, err := os.OpenFile(localname, os.O_CREATE, mode)
@@ -59,7 +59,7 @@ func Lock(globalname, localname string) (*LockContext, error) {
 			return err
 		}
 
-		lc = &LockContext{
+		lrc = &LockRmContext{
 			globalname: globalname,
 			local: f,
 		}
@@ -71,13 +71,13 @@ func Lock(globalname, localname string) (*LockContext, error) {
 		return nil, err
 	}
 
-	return lc, nil
+	return lrc, nil
 
 }
 
-func (lc *LockContext) Unlock() error {
-	return globalCtx(lc.globalname, func() error {
-		lc.local.Close()
-		return os.Remove(lc.local.Name())
+func (lrc *LockRmContext) Unlock() error {
+	return globalCtx(lrc.globalname, func() error {
+		lrc.local.Close()
+		return os.Remove(lrc.local.Name())
 	})
 }
