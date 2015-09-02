@@ -1,6 +1,6 @@
 // chris 090115
 
-package rmlock
+package lockfile
 
 import (
 	"os"
@@ -10,13 +10,13 @@ import (
 )
 
 func TestRmlock(t *testing.T) {
-	gf, err := ioutil.TempFile(".", "rmlock_test_global_")
+	gf, err := ioutil.TempFile(".", "lockfile_test_global_")
 	if err != nil {
 		t.Error(err)
 		return
 	}
 	defer os.Remove(gf.Name())
-	lf, err := ioutil.TempFile(".", "rmlock_test_local_")
+	lf, err := ioutil.TempFile(".", "lockfile_test_local_")
 
 	lc, err2 := Lock(gf.Name(), lf.Name())
 	if err2 != nil {

@@ -6,7 +6,7 @@
 //       - LockNb
 //       - LockRm
 
-package rmlock
+package lockfile
 
 import (
 	"os"
