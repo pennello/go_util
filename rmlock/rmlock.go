@@ -1,6 +1,10 @@
 // chris 090115 Unix removable lock file.
 
 // TODO Note how Close calls errors are not handled.
+// TODO Generalize to lockfile library:
+//       - Lock
+//       - LockNb
+//       - LockRm
 
 package rmlock
 
