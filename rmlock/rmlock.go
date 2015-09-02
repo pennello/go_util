@@ -10,6 +10,8 @@ import (
 	"golang.org/x/sys/unix"
 )
 
+const mode = 0666
+
 type LockContext struct {
 	globalname string
 
@@ -17,7 +19,7 @@ type LockContext struct {
 }
 
 func globalCtx(globalname string, inner func() error) error {
-	f, err := os.OpenFile(globalname, os.O_CREATE, 0666)
+	f, err := os.OpenFile(globalname, os.O_CREATE, mode)
 	if err != nil {
 		return err
 	}
@@ -42,7 +44,7 @@ func Lock(globalname, localname string) (*LockContext, error) {
 	var lc *LockContext
 
 	err := globalCtx(globalname, func() error {
-		f, err := os.Openfile(localname, os.O_CREATE, 0666)
+		f, err := os.OpenFile(localname, os.O_CREATE, mode)
 		if err != nil {
 			return err
 		}
