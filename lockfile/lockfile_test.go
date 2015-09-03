@@ -91,6 +91,6 @@ func TestRmlock(t *testing.T) {
 	_, err3 := LockRm(gf.Name(), lf.Name())
 	if err3 == nil {
 		lrc.Unlock()
-		t.Error(err3)
+		t.Error("double-lock failed to fail")
 	}
 }
