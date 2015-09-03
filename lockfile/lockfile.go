@@ -45,7 +45,7 @@
 // operations, open and lock, and close and unlink, with another lock
 // file that is itself not removed.  This is the approach that this
 // package takes with LockRm.  Using this approach, removable lock files
-// may be implemented with in a race-free manner.
+// may be implemented in a race-free manner.
 package lockfile
 
 // Close calls' errors are not handled explicitly.  The error conditions
