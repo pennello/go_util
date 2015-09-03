@@ -24,7 +24,7 @@ type LockContext struct {
 type LockRmContext struct {
 	globalname string
 
-	local *os.File
+	local *LockContext
 }
 
 func lock(filename string, block bool) (*LockContext, error) {
@@ -65,61 +65,33 @@ func (lc *LockContext) Unlock() {
 }
 
 func globalCtx(globalname string, inner func() error) error {
-	f, err := os.OpenFile(globalname, os.O_CREATE, mode)
+	glc, err := Lock(globalname)
 	if err != nil {
 		return err
 	}
-	defer f.Close()
-
-	if err := unix.Flock(int(f.Fd()), unix.LOCK_EX); err != nil {
-		return err
-	}
-
-	if err := inner(); err != nil {
-		return err
-	}
-
-	if err = unix.Flock(int(f.Fd()), unix.LOCK_UN); err != nil {
-		return err
-	}
-
-	return nil
+	defer glc.Unlock()
+	return inner()
 }
 
 func LockRm(globalname, localname string) (*LockRmContext, error) {
 	var lrc *LockRmContext
-
 	err := globalCtx(globalname, func() error {
-		f, err := os.OpenFile(localname, os.O_CREATE, mode)
+		llc, err := LockNb(localname)
 		if err != nil {
 			return err
 		}
-
-		err = unix.Flock(int(f.Fd()), unix.LOCK_EX | unix.LOCK_NB)
-		if err != nil {
-			f.Close()
-			return err
-		}
-
 		lrc = &LockRmContext{
 			globalname: globalname,
-			local: f,
+			local: llc,
 		}
-
 		return nil
 	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return lrc, nil
-
+	return lrc, err
 }
 
 func (lrc *LockRmContext) Unlock() error {
 	return globalCtx(lrc.globalname, func() error {
-		lrc.local.Close()
-		return os.Remove(lrc.local.Name())
+		lrc.local.Unlock()
+		return os.Remove(lrc.local.f.Name())
 	})
 }

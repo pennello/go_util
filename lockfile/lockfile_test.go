@@ -85,32 +85,39 @@ func TestLockNb(t *testing.T) {
 	}
 }
 
-func TestRmlock(t *testing.T) {
-	gf, err := ioutil.TempFile(".", "lockfile_test_global_")
+func testLockRm(t *testing.T, globalname string) string {
+	localname := testTempFileName(t)
+	if localname == "" {
+		return ""
+	}
+
+	lrc, err := LockRm(globalname, localname)
 	if err != nil {
 		t.Error(err)
-		return
+		return ""
 	}
-	defer os.Remove(gf.Name())
-	lf, err := ioutil.TempFile(".", "lockfile_test_local_")
+	defer lrc.Unlock()
 
-	lrc, err2 := LockRm(gf.Name(), lf.Name())
-	if err2 != nil {
-		t.Error(err2)
-		return
-	}
-	defer func() {
-		// Extra strict unlock error detection since this is a
-		// test.
-		err := lrc.Unlock()
-		if err != nil {
-			t.Error(err)
-		}
-	}()
-
-	_, err3 := LockRm(gf.Name(), lf.Name())
-	if err3 == nil {
-		lrc.Unlock()
+	if _, err2 := LockRm(globalname, localname); err2 == nil {
 		t.Error("double-lock failed to fail")
+	}
+
+	return localname
+}
+
+func TestLockRm(t *testing.T) {
+	globalname := testTempFileName(t)
+	if globalname == "" {
+		return
+	}
+	defer os.Remove(globalname)
+	for i := 0; i < 10000; i++ {
+		localname := testLockRm(t, globalname)
+		if localname == "" {
+			return
+		}
+		if _, err := os.Stat(localname); err == nil {
+			t.Error("rmlock didn't clean up")
+		}
 	}
 }
