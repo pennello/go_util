@@ -4,10 +4,66 @@ package lockfile
 
 import (
 	"os"
+	"sync"
 	"testing"
+	"time"
 
 	"io/ioutil"
 )
+
+func testTempFileName(t *testing.T) string {
+	f, err := ioutil.TempFile(".", "lockfile_test_")
+	if err != nil {
+		t.Error(err)
+		return ""
+	}
+	f.Close()
+	return f.Name()
+}
+
+func TestLock(t *testing.T) {
+	name := testTempFileName(t)
+	if name == "" {
+		return
+	}
+	lc, err := Lock(name)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	locked := true
+	sub := false
+	done := make(chan struct{})
+	mu := new(sync.Mutex)
+
+	go func() {
+		defer close(done)
+		_, err := Lock(name)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		mu.Lock()
+		defer mu.Unlock()
+		if locked {
+			t.Error("parent-goroutine still locked")
+			return
+		}
+		sub = true
+	}()
+
+	time.Sleep(10 * time.Millisecond)
+	mu.Lock()
+	lc.Unlock()
+	locked = false
+	if sub {
+		t.Error("sub-goroutine was able to acquire lock")
+	}
+	mu.Unlock()
+
+	<-done
+}
 
 func TestRmlock(t *testing.T) {
 	gf, err := ioutil.TempFile(".", "lockfile_test_global_")

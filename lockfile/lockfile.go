@@ -16,10 +16,36 @@ import (
 
 const mode = 0666
 
+type LockContext struct {
+	f *os.File
+}
+
 type LockRmContext struct {
 	globalname string
 
 	local *os.File
+}
+
+// TODO document:
+// - blocking
+// - doesn't remove
+func Lock(filename string) (*LockContext, error) {
+	f, err := os.OpenFile(filename, os.O_CREATE, mode)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := unix.Flock(int(f.Fd()), unix.LOCK_EX); err != nil {
+		f.Close()
+		return nil, err
+	}
+
+	return &LockContext{f}, nil
+}
+
+func (lc *LockContext) Unlock() {
+	// Close implicitly releases any kernel advisory locks.
+	lc.f.Close()
 }
 
 func globalCtx(globalname string, inner func() error) error {
