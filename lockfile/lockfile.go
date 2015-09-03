@@ -82,7 +82,7 @@ func LockRm(globalname, localname string) (*LockRmContext, error) {
 		}
 		lrc = &LockRmContext{
 			globalname: globalname,
-			local: llc,
+			local:      llc,
 		}
 		return nil
 	})
