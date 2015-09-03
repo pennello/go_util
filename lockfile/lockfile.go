@@ -58,8 +58,6 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-const mode = 0666
-
 // Obtain a LockContext by calling Lock or LockNb.  It represents a
 // locked file.
 type LockContext struct {
@@ -78,7 +76,7 @@ type LockRmContext struct {
 // specify whether or not you want the flock call to block by passing
 // the block boolean.
 func lock(filename string, block bool) (*LockContext, error) {
-	f, err := os.OpenFile(filename, os.O_CREATE, mode)
+	f, err := os.OpenFile(filename, os.O_CREATE, 0666)
 	if err != nil {
 		return nil, err
 	}
