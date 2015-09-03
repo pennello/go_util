@@ -58,14 +58,14 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-// Obtain a LockContext by calling Lock or LockNb.  It represents a
-// locked file.
+// LockContext represents a locked file, and is obtained by calling Lock
+// or LockNb.
 type LockContext struct {
 	f *os.File
 }
 
-// Obtain a LockRmContext by calling LockRm.  It represents a locked
-// file that can be removed on Unlock.
+// LockRmContext represents a locked file that can be removed on Unlock,
+// and is obtained by calling LockRm.
 type LockRmContext struct {
 	globalname string
 
