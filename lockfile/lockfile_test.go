@@ -26,6 +26,7 @@ func TestLock(t *testing.T) {
 	if name == "" {
 		return
 	}
+	defer os.Remove(name)
 	lc, err := Lock(name)
 	if err != nil {
 		t.Error(err)
