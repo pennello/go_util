@@ -66,6 +66,25 @@ func TestLock(t *testing.T) {
 	<-done
 }
 
+func TestLockNb(t *testing.T) {
+	name := testTempFileName(t)
+	if name == "" {
+		return
+	}
+	defer os.Remove(name)
+	lc, err := LockNb(name)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	defer lc.Unlock()
+
+	if _, err2 := LockNb(name); err2 == nil {
+		t.Error(err)
+		return
+	}
+}
+
 func TestRmlock(t *testing.T) {
 	gf, err := ioutil.TempFile(".", "lockfile_test_global_")
 	if err != nil {

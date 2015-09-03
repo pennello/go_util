@@ -27,21 +27,36 @@ type LockRmContext struct {
 	local *os.File
 }
 
-// TODO document:
-// - blocking
-// - doesn't remove
-func Lock(filename string) (*LockContext, error) {
+func lock(filename string, block bool) (*LockContext, error) {
 	f, err := os.OpenFile(filename, os.O_CREATE, mode)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := unix.Flock(int(f.Fd()), unix.LOCK_EX); err != nil {
+	how := unix.LOCK_EX
+	if !block {
+		how = how | unix.LOCK_NB
+	}
+	if err := unix.Flock(int(f.Fd()), how); err != nil {
 		f.Close()
 		return nil, err
 	}
 
 	return &LockContext{f}, nil
+}
+
+// TODO document:
+// - blocking
+// - doesn't remove
+func Lock(filename string) (*LockContext, error) {
+	return lock(filename, true)
+}
+
+// TODO document:
+// - non-blocking
+// - doesn't remove
+func LockNb(filename string) (*LockContext, error) {
+	return lock(filename, false)
 }
 
 func (lc *LockContext) Unlock() {
