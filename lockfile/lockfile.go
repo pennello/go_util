@@ -5,6 +5,7 @@
 //       - Lock
 //       - LockNb
 //       - LockRm
+// TODO Test on Linux and Windows.
 
 package lockfile
 
