@@ -1,7 +1,5 @@
 // chris 090115
 
-// TODO Test on Linux and Windows.
-
 // Package lockfile implements convenient lock file utilities for
 // Unix-based systems.
 //
@@ -47,6 +45,8 @@
 // package takes with LockRm.  Using this approach, removable lock files
 // may be implemented in a race-free manner.
 package lockfile
+
+// NB: Does not compile on Windows.
 
 // Close calls' errors are not handled explicitly.  The error conditions
 // all end up with the file descriptor being closed anyway, so there is
