@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	tests := new(fixflag.SliceStrings)
+	tests := new(fixflag.Strings)
 	flag.Var(tests, "test", "can specify more than once")
 	flag.Parse()
 	log.Print(*tests)
