@@ -2,7 +2,7 @@
 
 // flag_test tests the contents of its parent package.  This is
 // implemented as a separate command due to the flag library using
-// global state and it being somewhat difficult to integrate it with
+// global state and it being somewhat difficult to integrate with
 // package testing.
 package main
 
