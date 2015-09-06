@@ -270,3 +270,7 @@ func TestMultiWrite8(t *testing.T) {
 	expect := []byte(`12345`)
 	testBytesHelp(t, b, expect)
 }
+
+func TestEmpty(t *testing.T) {
+	testBytesHelp(t, New(10), []byte{})
+}
